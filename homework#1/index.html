@@ -1,0 +1,255 @@
+<html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      function isCellPhone(p) {
+        var regExp = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})[-][0-9]{3,4}[-][0-9]{4}$/;
+        return regExp.test(p);
+      }
+
+      function order() {
+        let name = $("#order_name").val();
+        let count = $("#order_count").val();
+        let address = $("#order_address").val();
+        let phone = $("#order_phone").val();
+
+        if (name == "") {
+          alert("이름을 입력해주세요");
+          $("#order_name").focus();
+          return;
+        } else if (count == "") {
+          alert("수량을 입력해주세요");
+          $("#order_count").focus();
+          return;
+        } else if (address == "") {
+          alert("주소를 입력해주세요");
+          $("#order_address").focus();
+          return;
+        } else if (phone == "") {
+          alert("휴대폰번호를 입력해주세요");
+          $("#order_phone").focus();
+          return;
+        } else if (!isCellPhone(phone)) {
+          alert(
+            "휴대폰번호 입력 형식이 틀립니다. \n 010-0000-0000으로 입력해주세요"
+          );
+          return;
+        } else alert("주문이 완료되었습니다!");
+      }
+
+      function hey() {
+        alert("주문이 완료되었습니다!");
+      }
+    </script>
+
+    <script>
+      // 숫자 타입에서 쓸 수 있도록 format() 함수 추가 (천단위 콤마)
+      Number.prototype.format = function () {
+        if (this == 0) return 0;
+
+        var reg = /(^[+-]?\d+)(\d{3})/;
+        var n = this + "";
+
+        while (reg.test(n)) n = n.replace(reg, "$1" + "," + "$2");
+
+        return n;
+      };
+
+      // 문자열 타입에서 쓸 수 있도록 format() 함수 추가
+      String.prototype.format = function () {
+        var num = parseFloat(this);
+        if (isNaN(num)) return "0";
+
+        return num.format();
+      };
+
+      // 출처: https://stove99.tistory.com/113 [스토브 훌로구]
+
+      function currency() {
+        $("#currencyInfo").empty();
+        $.ajax({
+          type: "GET", // GET 방식으로 요청한다.
+          url: "https://api.exchangeratesapi.io/latest",
+
+          success: function (response) {
+            // 서버에서 준 결과를 response라는 변수에 담음
+            var curr = response.rates.KRW / response.rates.USD;
+
+            console.log(curr.toFixed(2).format());
+            $("#currencyInfo").append(
+              "<p>달러-원 환율:" + curr.toFixed(2).format() + "</p>"
+            );
+          },
+        }); // 여기에 코드를 입력하세요
+      }
+    </script>
+
+    <style>
+      * {
+        font-family: "Single Day", cursive;
+      }
+
+      .buttoncenter {
+        margin: 10px auto;
+        width: 200px;
+      }
+      .wrap {
+        margin: 10px auto;
+        width: 600px;
+      }
+    </style>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Single+Day&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>도시락 주문 페이지</title>
+  </head>
+
+  <body>
+    <form class="form-signin">
+      <div class="wrap">
+        <img
+          class="mb-4"
+          src="http://truelife.wisacdn.com/_data/attach/202003/26/bca619437ff1664087b741950d73ae27.jpg"
+          alt=""
+          width="600"
+          height="600"
+        /><br />
+        <span style="font-size: 24;">도시락 주문 페이지</span> 가격: 49,900원/개
+        <div>
+          <p>
+            구성: 마파두부, 우거지 새우탕, 오징어채, 마늘종, 시금치나물, 잡곡밥
+            <br />내용량: 800g <br />열량: 1,000kcal
+          </p>
+        </div>
+
+        <div id="currencyInfo" style="color: blue;">
+          <script>
+            window.onload = currency();
+          </script>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <div class="col-sm-12.1 my-1">
+          <label class="sr-only" for="inlineFormInputGroupUsername"
+            >Username</label
+          >
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">주문자 성함</div>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              id="order_name"
+              placeholder="주문자 성함"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-12.1 my-1">
+          <label class="sr-only" for="inlineFormInputGroupUsername"
+            >Username</label
+          >
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">수량</div>
+            </div>
+            <select class="custom-select" id="order_count">
+              <option selected value="">수량을 선택하세요</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-sm-12.1 my-1">
+          <label class="sr-only" for="inlineFormInputGroupUsername"
+            >Username</label
+          >
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">주소</div>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              id="order_address"
+              placeholder="주소"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-12.1 my-1">
+          <label class="sr-only" for="inlineFormInputGroupUsername"
+            >Username</label
+          >
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">전화</div>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              id="order_phone"
+              placeholder="전화"
+            />
+          </div>
+        </div>
+
+        <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me" /> Remember me
+          </label>
+        </div>
+
+        <div class="buttoncenter">
+          <div class="col-sm-12.1 my-1">
+            <button
+              onclick="order()"
+              class="col-sm-12 btn btn-lg btn-primary btn-block"
+              type="button"
+            >
+              주문하기
+            </button>
+
+            <p class="mt-5 mb-3 text-muted text-center">© 2017-2018</p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </body>
+</html>
